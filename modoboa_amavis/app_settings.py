@@ -76,7 +76,7 @@ GLOBAL_PARAMETERS_STRUCT = collections.OrderedDict([
         ])
     }),
     ("lsep", {
-        "label": _("Manual lerning"),
+        "label": _("Manual learning"),
         "params": collections.OrderedDict([
             ("manual_learning", {
                 "label": _("Enable manual learning"),
@@ -84,33 +84,33 @@ GLOBAL_PARAMETERS_STRUCT = collections.OrderedDict([
             }),
             ("sa_is_local", {
                 "label": _("Is Spamassassin local?"),
-                "display":"manual_learning=True",
+                "display":"manual_learning=true",
                 "help_text": _("Tell if Spamassassin is running on the same server than modoboa")
             }),
             ("default_user", {
                 "label": _("Default user"),
-                "display":"manual_learning=True",
+                "display":"manual_learning=true",
                 "help_text": _( "Name of the user owning the default bayesian database")
             }),
             ("spamd_address", {
                 "label": _("Spamd address"),
-                "display":"sa_is_local=False",
+                "display":"sa_is_local=false",
                 "help_text": _("The IP address where spamd can be reached")
             }),
             ("spamd_port", {
                 "label": _("Spamd port"),
-                "display":"sa_is_local=False",
+                "display":"sa_is_local=false",
                 "help_text": _("The TCP port spamd is listening on")
             }),
             ("domain_level_learning", {
                 "label": _("Enable per-domain manual learning"),
-                "display":"manual_learning=True",
+                "display":"manual_learning=false",
                 "help_text": _("Allow domain administrators to train Spamassassin "
                                 "(within dedicated per-domain databases)")
             }),
             ("user_level_learning", {
                 "label": _("Enable per-user manual learning"),
-                "display":"manual_learning=True",
+                "display":"manual_learning=false",
                 "help_text": _("Allow simple users to personally train Spamassassin "
                                 "(within a dedicated database)")
             })

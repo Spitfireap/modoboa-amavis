@@ -42,7 +42,7 @@ class Amavis(ModoExtension):
             "user", forms.UserSettings, ugettext_lazy("Quarantine"))
         #Admin parameters V2
         param_tools.registry.add2(
-        "global", "amavis", ugettext_lazy("Amavis"), app_settings.GLOBAL_PARAMETERS_STRUCT,
+        "global", "modoboa_amavis", ugettext_lazy("Amavis"), app_settings.GLOBAL_PARAMETERS_STRUCT,
         serializers.AmavisGlobalParameters)
 
     def load_initial_data(self):
