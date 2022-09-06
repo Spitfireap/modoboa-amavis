@@ -32,9 +32,18 @@ class Amavis(ModoExtension):
     available_for_topredirection = True
 
     def load(self):
+        from .api.v2 import serializers
+        from . import app_settings
+        
+        #Admin parameters
         param_tools.registry.add("global", forms.ParametersForm, "Amavis")
+        #Quarantine
         param_tools.registry.add(
             "user", forms.UserSettings, ugettext_lazy("Quarantine"))
+        #Admin parameters V2
+        param_tools.registry.add2(
+        "global", "amavis", ugettext_lazy("Amavis"), app_settings.GLOBAL_PARAMETERS_STRUCT,
+        serializers.AmavisGlobalParameters)
 
     def load_initial_data(self):
         """Create records for existing domains and co."""
