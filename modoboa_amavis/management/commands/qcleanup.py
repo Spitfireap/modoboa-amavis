@@ -12,6 +12,7 @@ from modoboa.parameters import tools as param_tools
 from ...models import Maddr, Msgrcpt, Msgs
 from ...modo_extension import Amavis
 
+from django.db import connections
 
 class Command(BaseCommand):
     args = ""
@@ -57,12 +58,26 @@ class Command(BaseCommand):
                 conf["max_messages_age"]))
         limit = int(time.time()) - (conf["max_messages_age"] * 24 * 3600)
         while True:
-            qset = Msgs.objects.filter(
-                pk__in=list(Msgs.objects.filter(time_num__lt=limit).values_list("pk", flat=True)[:5000])
-            )
-            if not qset.exists():
-                break
-            qset.delete()
+            # Workarround for Postgresql (due to psycopg2, should be fix in v3)
+            if connections["amavis"].vendor == "postgresql":
+                with connections["amavis"].cursor() as cursor:
+                    cursor.execute(
+                        "SELECT mail_id FROM msgs WHERE time_num < %s", [limit])
+                    pk_list = cursor.fetchmany(5000)
+                    if len(pk_list) == 0:
+                        # No more element
+                        break
+                    for element in pk_list:
+                        Msgs.objects.filter(mail_id=element[0]).delete()
+
+            else:
+                qset = Msgs.objects.filter(
+                    pk__in=list(Msgs.objects.filter(
+                        time_num__lt=limit).values_list("pk", flat=True)[:5000])
+                )
+                if not qset.exists():
+                    break
+                qset.delete()
 
         self.__vprint("Deleting unreferenced e-mail addresses...")
         while True:
