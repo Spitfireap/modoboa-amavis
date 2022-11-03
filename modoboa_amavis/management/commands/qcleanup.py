@@ -63,12 +63,12 @@ class Command(BaseCommand):
                 with connections["amavis"].cursor() as cursor:
                     cursor.execute(
                         "SELECT mail_id FROM msgs WHERE time_num < %s", [limit])
-                    pk_list = cursor.fetchmany(5000)
-                    if len(pk_list) == 0:
-                        # No more element
-                        break
-                    for element in pk_list:
-                        Msgs.objects.filter(mail_id=element[0]).delete()
+                    pk_list = cursor.fetchone()
+                    while pk_list is not None:
+                        deleted_obj = Msgs.objects.get(pk=pk_list[0]).delete()
+                        if deleted_obj[0] == 1:
+                            print(f"1 mail deleted with id: {pk_list[0]} !")
+                        pk_list = cursor.fetchone()
 
             else:
                 qset = Msgs.objects.filter(
